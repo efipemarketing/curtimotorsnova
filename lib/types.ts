@@ -47,6 +47,20 @@ export interface ContactMessage {
   read: boolean
 }
 
+export interface Scheduling {
+  id: string
+  vehicleId: string
+  vehicleName: string
+  customerName: string
+  customerEmail: string
+  customerPhone: string
+  preferredDate: Date
+  preferredTime: string
+  message?: string
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed'
+  createdAt: Date
+}
+
 export interface AdminUser {
   uid: string
   email: string

@@ -1,4 +1,4 @@
-import type { Vehicle } from './types'
+import type { Vehicle, ContactMessage, Scheduling } from './types'
 
 export const mockVehicles: Vehicle[] = [
   {
@@ -270,3 +270,104 @@ export const getFeaturedVehicles = (): Vehicle[] => {
 export const getAvailableVehicles = (): Vehicle[] => {
   return mockVehicles.filter(v => v.status === 'available')
 }
+
+export const mockMessages: ContactMessage[] = [
+  {
+    id: '1',
+    name: 'João Silva',
+    email: 'joao.silva@email.com',
+    phone: '(11) 99999-1111',
+    subject: 'Interesse no Porsche 911',
+    message: 'Gostaria de saber mais informações sobre o Porsche 911 Carrera S. Está disponível para test drive?',
+    vehicleId: '1',
+    createdAt: new Date('2024-01-20'),
+    read: false,
+  },
+  {
+    id: '2',
+    name: 'Maria Santos',
+    email: 'maria.santos@email.com',
+    phone: '(11) 98888-2222',
+    subject: 'Financiamento Mercedes',
+    message: 'Vocês trabalham com financiamento? Tenho interesse no Mercedes-AMG GT 63.',
+    vehicleId: '2',
+    createdAt: new Date('2024-01-19'),
+    read: true,
+  },
+  {
+    id: '3',
+    name: 'Carlos Oliveira',
+    email: 'carlos.oliveira@email.com',
+    phone: '(11) 97777-3333',
+    subject: 'Dúvida sobre BMW M4',
+    message: 'O BMW M4 Competition aceita troca? Tenho um BMW 330i 2022.',
+    vehicleId: '3',
+    createdAt: new Date('2024-01-18'),
+    read: false,
+  },
+  {
+    id: '4',
+    name: 'Ana Pereira',
+    email: 'ana.pereira@email.com',
+    phone: '(11) 96666-4444',
+    subject: 'Visita à loja',
+    message: 'Qual o horário de funcionamento? Gostaria de visitar a loja no sábado.',
+    createdAt: new Date('2024-01-17'),
+    read: true,
+  },
+]
+
+export const mockSchedulings: Scheduling[] = [
+  {
+    id: '1',
+    vehicleId: '1',
+    vehicleName: 'Porsche 911 Carrera S 2024',
+    customerName: 'João Silva',
+    customerEmail: 'joao.silva@email.com',
+    customerPhone: '(11) 99999-1111',
+    preferredDate: new Date('2024-01-25'),
+    preferredTime: '10:00',
+    message: 'Gostaria de fazer um test drive no Porsche 911.',
+    status: 'confirmed',
+    createdAt: new Date('2024-01-20'),
+  },
+  {
+    id: '2',
+    vehicleId: '2',
+    vehicleName: 'Mercedes-AMG GT 63 2023',
+    customerName: 'Maria Santos',
+    customerEmail: 'maria.santos@email.com',
+    customerPhone: '(11) 98888-2222',
+    preferredDate: new Date('2024-01-26'),
+    preferredTime: '14:00',
+    message: 'Interesse em conhecer o Mercedes pessoalmente.',
+    status: 'pending',
+    createdAt: new Date('2024-01-19'),
+  },
+  {
+    id: '3',
+    vehicleId: '3',
+    vehicleName: 'BMW M4 Competition 2024',
+    customerName: 'Carlos Oliveira',
+    customerEmail: 'carlos.oliveira@email.com',
+    customerPhone: '(11) 97777-3333',
+    preferredDate: new Date('2024-01-24'),
+    preferredTime: '16:00',
+    message: 'Quero avaliar o M4 para possível troca.',
+    status: 'completed',
+    createdAt: new Date('2024-01-15'),
+  },
+  {
+    id: '4',
+    vehicleId: '6',
+    vehicleName: 'Ferrari Roma 2023',
+    customerName: 'Pedro Almeida',
+    customerEmail: 'pedro.almeida@email.com',
+    customerPhone: '(11) 95555-5555',
+    preferredDate: new Date('2024-01-27'),
+    preferredTime: '11:00',
+    message: 'Sonho em dirigir uma Ferrari!',
+    status: 'pending',
+    createdAt: new Date('2024-01-21'),
+  },
+]

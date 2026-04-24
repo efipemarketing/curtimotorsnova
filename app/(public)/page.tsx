@@ -76,8 +76,8 @@ export default function HomePage() {
         </div>
 
         {/* Content */}
-        <div className="container relative z-10 px-4 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
+        <div className="container relative z-10 px-4 lg:px-8 flex items-center justify-center">
+          <div className="max-w-3xl text-center">
             <FadeIn delay={0.2}>
               <span className="inline-block px-4 py-2 mb-6 text-sm font-medium bg-primary/10 text-primary rounded-full border border-primary/20">
                 Revenda Premium de Automóveis

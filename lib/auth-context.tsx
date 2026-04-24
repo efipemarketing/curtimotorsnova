@@ -1,14 +1,8 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import {
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut as firebaseSignOut,
-  type User,
-} from 'firebase/auth'
-import { doc, getDoc } from 'firebase/firestore'
-import { auth, db, isFirebaseConfigured } from './firebase'
+import { createClient } from '@/lib/supabase/client'
+import type { User } from '@supabase/supabase-js'
 import type { AdminUser } from './types'
 
 interface AuthContextType {
@@ -23,7 +17,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
-// Demo admin user for when Firebase is not configured
+// Demo admin user for when Supabase is not configured
 const DEMO_ADMIN: AdminUser = {
   id: 'demo-admin',
   email: 'admin@curtimotors.com',
@@ -33,44 +27,76 @@ const DEMO_ADMIN: AdminUser = {
   updatedAt: new Date(),
 }
 
+// Check if Supabase is configured
+const isSupabaseConfigured = !!(
+  process.env.NEXT_PUBLIC_SUPABASE_URL &&
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+)
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null)
   const [loading, setLoading] = useState(true)
-  const isDemoMode = !isFirebaseConfigured
+  const isDemoMode = !isSupabaseConfigured
 
   useEffect(() => {
-    // If Firebase is not configured, use demo mode
-    if (!isFirebaseConfigured || !auth) {
+    // If Supabase is not configured, use demo mode
+    if (!isSupabaseConfigured) {
       setLoading(false)
       return
     }
 
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      setUser(firebaseUser)
+    const supabase = createClient()
+
+    // Get initial session
+    const getSession = async () => {
+      const { data: { user: supabaseUser } } = await supabase.auth.getUser()
+      setUser(supabaseUser)
       
-      if (firebaseUser && db) {
-        // Check if user is admin
-        try {
-          const adminDocRef = doc(db, 'admins', firebaseUser.uid)
-          const adminDoc = await getDoc(adminDocRef)
-          
-          if (adminDoc.exists()) {
-            setAdminUser(adminDoc.data() as AdminUser)
-          } else {
-            setAdminUser(null)
-          }
-        } catch {
-          setAdminUser(null)
-        }
+      if (supabaseUser) {
+        // For now, treat any authenticated user as admin
+        // You can add role checking from user metadata or a separate table later
+        setAdminUser({
+          id: supabaseUser.id,
+          email: supabaseUser.email || '',
+          name: supabaseUser.user_metadata?.name || supabaseUser.email || 'Admin',
+          role: 'admin',
+          createdAt: new Date(supabaseUser.created_at),
+          updatedAt: new Date(),
+        })
       } else {
         setAdminUser(null)
       }
       
       setLoading(false)
-    })
+    }
 
-    return () => unsubscribe()
+    getSession()
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        const supabaseUser = session?.user ?? null
+        setUser(supabaseUser)
+        
+        if (supabaseUser) {
+          setAdminUser({
+            id: supabaseUser.id,
+            email: supabaseUser.email || '',
+            name: supabaseUser.user_metadata?.name || supabaseUser.email || 'Admin',
+            role: 'admin',
+            createdAt: new Date(supabaseUser.created_at),
+            updatedAt: new Date(),
+          })
+        } else {
+          setAdminUser(null)
+        }
+      }
+    )
+
+    return () => {
+      subscription.unsubscribe()
+    }
   }, [])
 
   const signIn = async (email: string, password: string) => {
@@ -80,11 +106,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setAdminUser(DEMO_ADMIN)
         return
       }
-      throw new Error('Credenciais inválidas. Use admin@curtimotors.com / admin123')
+      throw new Error('Credenciais invalidas. Use admin@curtimotors.com / admin123')
     }
     
-    if (!auth) throw new Error('Firebase não configurado')
-    await signInWithEmailAndPassword(auth, email, password)
+    const supabase = createClient()
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+    
+    if (error) {
+      throw new Error(error.message)
+    }
   }
 
   const signOut = async () => {
@@ -93,8 +126,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return
     }
     
-    if (!auth) return
-    await firebaseSignOut(auth)
+    const supabase = createClient()
+    await supabase.auth.signOut()
     setAdminUser(null)
   }
 

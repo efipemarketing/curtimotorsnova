@@ -135,8 +135,8 @@ export default function AdminLoginPage() {
 
           <div className="mt-6 p-4 rounded-lg bg-muted">
             <p className="text-xs text-muted-foreground text-center">
-              <strong>Demo:</strong> Configure o Firebase para habilitar autenticação.
-              Sem Firebase, o painel funcionará em modo demo.
+              <strong>Demo:</strong> Configure o Supabase para habilitar autenticacao.
+              Sem Supabase, use admin@curtimotors.com / admin123
             </p>
           </div>
         </div>

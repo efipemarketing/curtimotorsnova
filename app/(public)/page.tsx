@@ -77,7 +77,7 @@ export default function HomePage() {
 
         {/* Content */}
         <div className="container relative z-10 px-4 lg:px-8">
-          <div className="max-w-3xl">
+          <div className="max-w-3xl mx-auto text-center">
             <FadeIn delay={0.2}>
               <span className="inline-block px-4 py-2 mb-6 text-sm font-medium bg-primary/10 text-primary rounded-full border border-primary/20">
                 Revenda Premium de Automóveis
@@ -93,14 +93,14 @@ export default function HomePage() {
             </FadeIn>
 
             <FadeIn delay={0.6}>
-              <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed max-w-2xl">
+              <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed max-w-2xl mx-auto">
                 Descubra nossa seleção exclusiva de automóveis premium das melhores marcas do mundo. 
                 Qualidade, procedência e confiança em cada negociação.
               </p>
             </FadeIn>
 
             <FadeIn delay={0.8}>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
                   <Link href="/estoque">
                     Ver Estoque Completo
@@ -153,15 +153,13 @@ export default function HomePage() {
       <section className="py-20 lg:py-28">
         <div className="container px-4 lg:px-8">
           <FadeIn>
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
-              <div>
-                <span className="text-primary text-sm font-medium uppercase tracking-wider">
-                  Destaques
-                </span>
-                <h2 className="text-3xl md:text-4xl font-heading font-bold mt-2">
-                  Veículos em Destaque
-                </h2>
-              </div>
+            <div className="text-center mb-12">
+              <span className="text-primary text-sm font-medium uppercase tracking-wider">
+                Destaques
+              </span>
+              <h2 className="text-3xl md:text-4xl font-heading font-bold mt-2 mb-4">
+                Veículos em Destaque
+              </h2>
               <Button asChild variant="ghost" className="gap-2 group">
                 <Link href="/estoque">
                   Ver todos
